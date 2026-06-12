@@ -152,15 +152,15 @@
 
     /* Primary colors for button states */
     .toolbar button.is-active,
-    .toolbar button[data-load="PP01_reveal.html"]:hover {
+    .toolbar button[data-load="presentations/PP01_reveal.html"]:hover {
       background: var(--bh-blue);
       color: #fff;
     }
-    .toolbar button[data-load="PP02_reveal.html"]:hover {
+    .toolbar button[data-load="presentations/PP02_reveal.html"]:hover {
       background: var(--bh-red);
       color: #fff;
     }
-    .toolbar button[data-load="PP03_reveal.html"]:hover {
+    .toolbar button[data-load="presentations/2026_BlenderBIM.html"]:hover {
       background: var(--bh-light-blue);
       color: #fff;
     }
@@ -387,7 +387,16 @@
       grid-template-columns: repeat(2, 1fr);
     }
 
-    .card-actions button {
+    .card-actions.is-five {
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .card-actions.is-five .full-width {
+      grid-column: span 2;
+    }
+
+    .card-actions button,
+    .card-actions .download-link {
       min-height: 38px;
       padding: 6px 8px;
       font-size: 13px;
@@ -540,9 +549,9 @@
       </div>
       <div class="toolbar">
         <button type="button" data-load="bauhaus_animation - A.html" data-title="首頁動畫 A (靜態)">首頁動畫</button>
-        <button type="button" data-load="PP01_reveal.html" data-title="PP01 論文 GPT">PP01</button>
-        <button type="button" data-load="PP02_reveal.html" data-title="PP02 期刊 Web3D">PP02</button>
-        <button type="button" data-load="PP03_reveal.html" data-title="PP03 MCP + Bonsai BIM 4D">PP03</button>
+        <button type="button" data-load="presentations/PP01_reveal.html" data-title="PP01 論文 GPT">PP01</button>
+        <button type="button" data-load="presentations/PP02_reveal.html" data-title="PP02 期刊 Web3D">PP02</button>
+        <button type="button" data-load="presentations/2026_BlenderBIM.html" data-title="2026 BlenderBIM 簡報">PP03</button>
       </div>
     </header>
 
@@ -576,7 +585,7 @@
             <h3>PP01 論文 GPT</h3>
             <p>生成式人工智慧在建築物入口設計之整合流程研究：AIGC、BIM/IFC 與 GRC 工法應用。</p>
             <div class="card-actions is-two">
-              <button type="button" class="load-btn" data-load="PP01_reveal.html" data-title="PP01 論文 GPT">簡報展示</button>
+              <button type="button" class="load-btn" data-load="presentations/PP01_reveal.html" data-title="PP01 論文 GPT">簡報展示</button>
               <button type="button" class="load-btn" data-download="HTML/PDF/PP01_論文_GPT.pdf" data-title="PP01 PDF 文件">PDF 原文</button>
             </div>
           </article>
@@ -586,9 +595,9 @@
             <h3>PP02 期刊 Web3D</h3>
             <p>從 IFC 到互動式 Web3D：結合 AIGC 的建築資訊可視化「類 4D」施工順序展示。</p>
             <div class="card-actions is-four">
-              <button type="button" class="load-btn" data-load="PP02_reveal.html" data-title="PP02 期刊 Web3D">簡報展示</button>
-              <button type="button" class="load-btn" data-load="PP02_Web3D_pptx_exact_reveal.html" data-title="PP02 PPTX 視覺復刻">PPTX復刻</button>
-              <button type="button" class="load-btn" data-load="PP02_Web3D_original_animation.html" data-title="PP02 原始 PPT 動畫">PPT動畫</button>
+              <button type="button" class="load-btn" data-load="presentations/PP02_reveal.html" data-title="PP02 期刊 Web3D">簡報展示</button>
+              <button type="button" class="load-btn" data-load="presentations/PP02_Web3D_pptx_exact_reveal.html" data-title="PP02 PPTX 視覺復刻">PPTX復刻</button>
+              <button type="button" class="load-btn" data-load="presentations/PP02_Web3D_original_animation.html" data-title="PP02 原始 PPT 動畫">PPT動畫</button>
               <button type="button" class="load-btn" data-download="HTML/PDF/PP02_期刊.pdf" data-title="PP02 PDF 文件">PDF 原文</button>
             </div>
           </article>
@@ -597,10 +606,12 @@
             <span>Technical Extension</span>
             <h3>PP03 MCP + Bonsai 4D</h3>
             <p>結合 MCP 之 Blender Bonsai BIM 4D 應用分析：AI Agent 語意驅動工作流。</p>
-            <div class="card-actions is-three">
-              <button type="button" class="load-btn" data-download="HTML/PDF/PP03_海報.pdf" data-title="PP03 研討會海報" style="grid-column: span 2;">海報</button>
-              <button type="button" class="load-btn" data-load="PP03_reveal.html" data-title="PP03 MCP + Bonsai BIM 4D">簡報展示</button>
+            <div class="card-actions is-five">
+              <button type="button" class="load-btn" data-download="HTML/PDF/PP03_海報.pdf" data-title="PP03 研討會海報">海報</button>
+              <button type="button" class="load-btn" data-download="HTML/PDF/PP03_海報2.pdf" data-title="PP03 研討會海報（版2）">海報</button>
+              <button type="button" class="load-btn" data-load="presentations/2026_BlenderBIM.html" data-title="2026 BlenderBIM 簡報">2026BlenderBIM(建研所)</button>
               <button type="button" class="load-btn" data-download="HTML/PDF/PP03_結合 MCP 之 Blender Bonsai BIM 4D 應用分析.pdf" data-title="PP03 PDF 文件">PDF 原文</button>
+              <button type="button" class="load-btn full-width" data-load="https://www.youtube.com/embed/a6fUvL9gYAQ" data-title="Architectural Design With Agents on NVIDIA RTX Spark" data-external="https://youtu.be/a6fUvL9gYAQ?si=Endud-AfZo-0ZxF-">Architectural Design With Agents on NVIDIA RTX Spark</button>
             </div>
           </article>
         </div>
@@ -611,7 +622,7 @@
         <h2 class="section-title">第二層 Web3D 展示入口</h2>
         <div class="file-list">
           <button type="button" class="file-item" data-load="HTML/Journal_Index.html" data-title="Journal_Index 第二層入口">
-            <span>Journal_Index.html</span><small>第二層入口</small>
+            <span>Journal_Index.html</span>
           </button>
           <button type="button" class="file-item" data-load="HTML/Journal_Web.html" data-title="Journal_Web">
             <span>Journal_Web.html</span><small>靜態展示</small>
@@ -709,17 +720,57 @@
         if (currentDownload) {
           downloadCurrent.href = currentDownload;
           downloadCurrent.hidden = false;
+          if (currentDownload.includes("youtube.com") || currentDownload.includes("youtu.be")) {
+            downloadCurrent.textContent = "在新分頁開啟";
+            downloadCurrent.removeAttribute("download");
+            downloadCurrent.setAttribute("target", "_blank");
+          } else {
+            downloadCurrent.textContent = "下載 PDF";
+            downloadCurrent.setAttribute("download", "");
+            downloadCurrent.removeAttribute("target");
+          }
         } else {
           downloadCurrent.href = "#";
           downloadCurrent.hidden = true;
         }
       }
 
+      function getYouTubeId(url) {
+        const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+        const match = url.match(regExp);
+        return (match && match[2].length === 11) ? match[2] : null;
+      }
+
       function loadFrame(src, title, downloadSrc = "") {
         currentSrc = src;
         currentTitle = title || src;
         viewerTitle.textContent = currentTitle;
-        viewer.innerHTML = `<iframe src="${src}" title="${currentTitle}"></iframe>`;
+        
+        const isYouTube = src.includes("youtube.com") || src.includes("youtu.be");
+        
+        if (isYouTube && window.location.protocol === "file:") {
+          const videoId = getYouTubeId(src) || "a6fUvL9gYAQ";
+          const watchUrl = downloadSrc || `https://youtu.be/${videoId}`;
+          viewer.innerHTML = `
+            <div style="position:relative; width:100%; height:100%; background:linear-gradient(rgba(0,0,0,0.75), rgba(0,0,0,0.75)), url('https://img.youtube.com/vi/${videoId}/hqdefault.jpg') no-repeat center/cover; display:flex; flex-direction:column; align-items:center; justify-content:center; color:#fff; text-align:center; padding:20px; box-sizing:border-box; font-family:'Noto Sans TC', sans-serif;">
+              <div style="font-size: 56px; color: #d62828; margin-bottom: 12px; cursor: pointer; line-height: 1; transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.15)'" onmouseout="this.style.transform='scale(1)'" onclick="window.open('${watchUrl}', '_blank')">
+                <svg viewBox="0 0 24 24" width="72" height="72" fill="#d62828" style="filter: drop-shadow(0px 4px 10px rgba(0,0,0,0.5));">
+                  <path d="M8 5v14l11-7z"/>
+                </svg>
+              </div>
+              <h3 style="margin: 0 0 8px 0; font-family: 'Oswald', 'Noto Sans TC', sans-serif; font-size: 20px; text-transform: uppercase; letter-spacing: 0.05em;">TECHNICAL EXTENSION VIDEO</h3>
+              <p style="margin: 0 0 20px 0; font-size: 13px; max-width: 500px; color: #cbd5e0; line-height: 1.5; font-weight: 700;">
+                偵測到您正使用本機檔案 (file://) 開啟網頁。<br>
+                由於 YouTube 安全性規定，本機網頁嵌入播放會被阻擋 (錯誤 153)。
+              </p>
+              <a href="${watchUrl}" target="_blank" class="download-link" style="background:#d62828; color:#fff; border-color:#111; box-shadow: 4px 4px 0px #111; font-family:'Oswald','Noto Sans TC',sans-serif; text-decoration:none;">
+                前往 YouTube 觀看影片
+              </a>
+            </div>`;
+        } else {
+          viewer.innerHTML = `<iframe src="${src}" title="${currentTitle}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>`;
+        }
+        
         updateDownload(downloadSrc);
         updateActiveButtons(src);
         updateModeSwitcherVisibility(src);
@@ -729,7 +780,7 @@
       // Action binding for display triggers
       document.querySelectorAll("[data-load]").forEach((button) => {
         button.addEventListener("click", () => {
-          loadFrame(button.dataset.load, button.dataset.title);
+          loadFrame(button.dataset.load, button.dataset.title, button.dataset.external || "");
         });
       });
 
