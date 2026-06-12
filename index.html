@@ -1,0 +1,775 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AIGC.4DBIM 互動簡報網站</title>
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@700&family=Noto+Sans+TC:wght@400;700;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #f4f4f2;
+      --surface: #ffffff;
+      --ink: #111111;
+      --muted: #555555;
+      --line: #111111;
+      --bh-red: #d62828;
+      --bh-blue: #003049;
+      --bh-yellow: #fcbf49;
+      --bh-light-blue: #2a9d8f;
+      --border-width: 3px;
+      --shadow: 8px 8px 0px #111111;
+      --shadow-hover: 12px 12px 0px #111111;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "Noto Sans TC", "Segoe UI", Arial, sans-serif;
+      color: var(--ink);
+      background-color: var(--bg);
+      background-image:
+        linear-gradient(rgba(0, 48, 73, 0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 48, 73, 0.04) 1px, transparent 1px);
+      background-size: 20px 20px;
+      padding: 0;
+    }
+
+    /* Bauhaus Decorative Header Elements */
+    .bh-decorator {
+      position: absolute;
+      top: 0;
+      right: 10%;
+      width: 140px;
+      height: 140px;
+      background: var(--bh-red);
+      border-radius: 50%;
+      z-index: -1;
+      opacity: 0.9;
+    }
+
+    .bh-decorator-square {
+      position: absolute;
+      top: 40px;
+      left: 5%;
+      width: 80px;
+      height: 80px;
+      background: var(--bh-blue);
+      z-index: -1;
+      opacity: 0.8;
+      transform: rotate(15deg);
+    }
+
+    .layout-wrapper {
+      position: relative;
+      width: min(1200px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 40px 0 60px;
+    }
+
+    header {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 24px;
+      align-items: end;
+      margin-bottom: 30px;
+      border-bottom: var(--border-width) solid var(--line);
+      padding-bottom: 24px;
+      position: relative;
+    }
+
+    .kicker {
+      color: var(--bh-red);
+      font-family: 'Oswald', sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    h1 {
+      margin: 0;
+      font-family: 'Oswald', sans-serif;
+      font-size: clamp(40px, 7vw, 84px);
+      line-height: 0.95;
+      letter-spacing: -0.02em;
+      text-transform: uppercase;
+      font-weight: 700;
+    }
+
+    header p {
+      margin: 18px 0 0;
+      max-width: 860px;
+      color: var(--muted);
+      font-size: 16px;
+      line-height: 1.6;
+      font-weight: 700;
+    }
+
+    .toolbar {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    /* Bauhaus Button Style */
+    button,
+    .download-link {
+      min-height: 44px;
+      border: var(--border-width) solid var(--line);
+      border-radius: 0;
+      background: #fff;
+      color: var(--ink);
+      padding: 10px 18px;
+      font-family: 'Oswald', 'Noto Sans TC', sans-serif;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      text-decoration: none;
+      transition: transform 0.1s, box-shadow 0.1s;
+      box-shadow: 4px 4px 0px #111111;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      text-transform: uppercase;
+    }
+
+    button:hover,
+    .download-link:hover {
+      transform: translate(-2px, -2px);
+      box-shadow: 6px 6px 0px #111111;
+      background: var(--bh-yellow);
+    }
+
+    button:active,
+    .download-link:active {
+      transform: translate(2px, 2px);
+      box-shadow: 2px 2px 0px #111111;
+    }
+
+    /* Primary colors for button states */
+    .toolbar button.is-active,
+    .toolbar button[data-load="PP01_reveal.html"]:hover {
+      background: var(--bh-blue);
+      color: #fff;
+    }
+    .toolbar button[data-load="PP02_reveal.html"]:hover {
+      background: var(--bh-red);
+      color: #fff;
+    }
+    .toolbar button[data-load="PP03_reveal.html"]:hover {
+      background: var(--bh-light-blue);
+      color: #fff;
+    }
+    .toolbar button[data-load="bauhaus_animation - A.html"]:hover,
+    .toolbar button.is-active[data-load="bauhaus_animation - A.html"],
+    .toolbar button[data-load="bauhaus_animation - B.html"]:hover,
+    .toolbar button.is-active[data-load="bauhaus_animation - B.html"] {
+      background: var(--bh-yellow);
+      color: var(--ink);
+    }
+
+    /* Middle Tier: 16:9 Viewer */
+    .viewer-sticky {
+      position: sticky;
+      top: 16px;
+      z-index: 20;
+      width: 100%;
+      margin-bottom: 40px;
+      border: var(--border-width) solid var(--line);
+      background: var(--surface);
+      box-shadow: var(--shadow);
+      transition: box-shadow 0.2s;
+    }
+
+    .viewer-sticky:hover {
+      box-shadow: var(--shadow-hover);
+    }
+
+    .viewer-titlebar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      min-height: 52px;
+      padding: 10px 16px;
+      border-bottom: var(--border-width) solid var(--line);
+      background: #fff;
+    }
+
+    .viewer-title {
+      font-family: 'Oswald', 'Noto Sans TC', sans-serif;
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    /* Bauhaus Viewer Mode Switcher */
+    .viewer-modes {
+      display: flex;
+      gap: 8px;
+      margin-right: auto;
+      margin-left: 20px;
+    }
+
+    .viewer-modes button {
+      min-height: 34px;
+      padding: 6px 12px;
+      font-size: 13px;
+      box-shadow: 2px 2px 0px #111111;
+      border: var(--border-width) solid var(--line);
+      background: #fff;
+      font-family: 'Oswald', 'Noto Sans TC', sans-serif;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.1s, box-shadow 0.1s;
+    }
+
+    .viewer-modes button:hover {
+      transform: translate(-1px, -1px);
+      box-shadow: 3px 3px 0px #111111;
+      background: var(--bh-yellow);
+    }
+
+    .viewer-modes button:active {
+      transform: translate(1px, 1px);
+      box-shadow: 1px 1px 0px #111111;
+    }
+
+    .viewer-modes button.is-active {
+      background: var(--bh-red);
+      color: #fff;
+      transform: translate(1px, 1px);
+      box-shadow: 1px 1px 0px #111111;
+    }
+
+    .viewer-actions {
+      display: flex;
+      gap: 10px;
+      flex: 0 0 auto;
+    }
+
+    .viewer-actions button,
+    .viewer-actions .download-link {
+      min-height: 34px;
+      padding: 6px 12px;
+      font-size: 13px;
+      box-shadow: 2px 2px 0px #111111;
+    }
+
+    .viewer-actions button:hover,
+    .viewer-actions .download-link:hover {
+      transform: translate(-1px, -1px);
+      box-shadow: 3px 3px 0px #111111;
+    }
+
+    .viewer-actions .download-link[hidden] {
+      display: none;
+    }
+
+    .viewer {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      background: #eeeeee;
+      overflow: hidden;
+    }
+
+    .viewer iframe {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      border: 0;
+      background: #fff;
+    }
+
+    /* Bottom Tier: Project Fields Grid */
+    .section {
+      margin-bottom: 30px;
+      padding: 30px;
+      border: var(--border-width) solid var(--line);
+      background: var(--surface);
+      box-shadow: 6px 6px 0px #111111;
+    }
+
+    .section-title {
+      margin: 0 0 24px;
+      padding-bottom: 12px;
+      border-bottom: var(--border-width) solid var(--line);
+      font-family: 'Oswald', 'Noto Sans TC', sans-serif;
+      font-size: 24px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .grid-cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+
+    .card {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      min-height: 250px;
+      padding: 24px;
+      border: var(--border-width) solid var(--line);
+      border-radius: 0;
+      background: #fff;
+      text-align: left;
+      color: inherit;
+      position: relative;
+      box-shadow: 4px 4px 0px #111111;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .card:hover {
+      transform: translate(-4px, -4px);
+      box-shadow: 8px 8px 0px #111111;
+    }
+
+    .card.is-pp01 { border-top: 12px solid var(--bh-blue); }
+    .card.is-pp02 { border-top: 12px solid var(--bh-red); }
+    .card.is-pp03 { border-top: 12px solid var(--bh-light-blue); }
+
+    .card span {
+      font-family: 'Oswald', sans-serif;
+      color: var(--bh-red);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .card.is-pp01 span { color: var(--bh-blue); }
+    .card.is-pp03 span { color: var(--bh-light-blue); }
+
+    .card h3 {
+      margin: 0;
+      font-family: 'Oswald', 'Noto Sans TC', sans-serif;
+      font-size: 22px;
+      font-weight: 700;
+      line-height: 1.15;
+    }
+
+    .card p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .card-actions {
+      display: grid;
+      gap: 8px;
+      margin-top: auto;
+    }
+
+    .card-actions.is-two {
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .card-actions.is-three {
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .card-actions.is-four {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .card-actions button {
+      min-height: 38px;
+      padding: 6px 8px;
+      font-size: 13px;
+      box-shadow: 3px 3px 0px #111111;
+    }
+
+    .file-list {
+      display: grid;
+      gap: 12px;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    }
+
+    .file-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      min-height: 48px;
+      padding: 10px 16px;
+      border: var(--border-width) solid var(--line);
+      background: #fff;
+      color: var(--ink);
+      text-align: left;
+      font-weight: 700;
+      border-radius: 0;
+      box-shadow: 3px 3px 0px #111111;
+      font-family: 'Oswald', 'Noto Sans TC', sans-serif;
+    }
+
+    .file-item:hover {
+      background: var(--bh-yellow);
+      transform: translate(-1px, -1px);
+      box-shadow: 4px 4px 0px #111111;
+    }
+
+    .file-item span {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .file-item small {
+      color: var(--bh-red);
+      font-weight: 700;
+      white-space: nowrap;
+      font-size: 11px;
+      border: 1px solid var(--bh-red);
+      padding: 2px 4px;
+      text-transform: uppercase;
+    }
+
+    .structure {
+      font-family: 'Noto Sans TC', sans-serif;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.6;
+      font-weight: 700;
+    }
+
+    .structure code {
+      background: rgba(0, 48, 73, 0.08);
+      padding: 2px 6px;
+      border: 1px solid var(--line);
+      font-weight: bold;
+    }
+
+    /* Fullscreen Mode Fixes */
+    .viewer-sticky:fullscreen {
+      width: 100vw;
+      height: 100vh;
+      min-height: 100vh;
+      border: 0;
+      box-shadow: none;
+      background: #000;
+    }
+
+    .viewer-sticky:fullscreen .viewer-titlebar {
+      background: #111;
+      color: #fff;
+      border-bottom: 2px solid #333;
+    }
+
+    .viewer-sticky:fullscreen .viewer {
+      background: #000;
+    }
+
+    /* RWD Adapters */
+    @media (max-width: 920px) {
+      header {
+        grid-template-columns: 1fr;
+      }
+
+      .toolbar {
+        justify-content: flex-start;
+      }
+
+      .viewer-sticky {
+        position: relative;
+        top: auto;
+        box-shadow: 6px 6px 0px #111111;
+      }
+
+      .grid-cards {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 560px) {
+      .layout-wrapper {
+        width: min(100% - 20px, 1200px);
+        padding-top: 20px;
+      }
+
+      .viewer-titlebar {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .viewer-actions {
+        width: 100%;
+      }
+
+      .viewer-actions button,
+      .viewer-actions .download-link {
+        flex: 1;
+        text-align: center;
+      }
+
+      .section {
+        padding: 20px;
+      }
+
+      .card-actions.is-four {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="bh-decorator"></div>
+  <div class="bh-decorator-square"></div>
+
+  <div class="layout-wrapper">
+    <!-- Top Tier: Project Info -->
+    <header>
+      <div>
+        <div class="kicker">AIGC.4D BIM WORKFLOW</div>
+        <h1>AIGC.4DBIM</h1>
+        <p>以台中大墩南路「雅園會館」為核心案例，聚焦於台灣第一座由 AIGC 生成式人工智慧參與設計並實際完成之建築體，進一步探討 AIGC 在建築設計、4D施工整合與數位應用中的學術意義與實務價值</p>
+      </div>
+      <div class="toolbar">
+        <button type="button" data-load="bauhaus_animation - A.html" data-title="首頁動畫 A (靜態)">首頁動畫</button>
+        <button type="button" data-load="PP01_reveal.html" data-title="PP01 論文 GPT">PP01</button>
+        <button type="button" data-load="PP02_reveal.html" data-title="PP02 期刊 Web3D">PP02</button>
+        <button type="button" data-load="PP03_reveal.html" data-title="PP03 MCP + Bonsai BIM 4D">PP03</button>
+      </div>
+    </header>
+
+    <!-- Middle Tier: 16:9 Viewer -->
+    <div class="viewer-sticky" id="viewer-shell">
+      <div class="viewer-titlebar">
+        <div class="viewer-title" id="viewer-title">AIGC.4DBIM 3D 動畫</div>
+        <div class="viewer-modes" id="viewer-modes">
+          <button type="button" id="btn-mode-a" class="is-active">靜態 A</button>
+          <button type="button" id="btn-mode-b">動態 B</button>
+        </div>
+        <div class="viewer-actions">
+          <a class="download-link" id="download-current" href="#" download hidden>下載 PDF</a>
+          <button type="button" id="reload-viewer">重新載入</button>
+          <button type="button" id="fullscreen-viewer">滿畫面</button>
+        </div>
+      </div>
+      <div class="viewer" id="main-viewer">
+        <iframe src="bauhaus_animation - A.html" title="首頁動畫 A (靜態)"></iframe>
+      </div>
+    </div>
+
+    <!-- Bottom Tier: Project Fields and Columns -->
+    <div class="sidebar-scroll">
+      <!-- Main Presentation Cards -->
+      <section class="section">
+        <h2 class="section-title">主簡報欄位</h2>
+        <div class="grid-cards">
+          <article class="card is-pp01">
+            <span>Research Foundation</span>
+            <h3>PP01 論文 GPT</h3>
+            <p>生成式人工智慧在建築物入口設計之整合流程研究：AIGC、BIM/IFC 與 GRC 工法應用。</p>
+            <div class="card-actions is-two">
+              <button type="button" class="load-btn" data-load="PP01_reveal.html" data-title="PP01 論文 GPT">簡報展示</button>
+              <button type="button" class="load-btn" data-download="HTML/PDF/PP01_論文_GPT.pdf" data-title="PP01 PDF 文件">PDF 原文</button>
+            </div>
+          </article>
+
+          <article class="card is-pp02">
+            <span>Primary Web3D Core</span>
+            <h3>PP02 期刊 Web3D</h3>
+            <p>從 IFC 到互動式 Web3D：結合 AIGC 的建築資訊可視化「類 4D」施工順序展示。</p>
+            <div class="card-actions is-four">
+              <button type="button" class="load-btn" data-load="PP02_reveal.html" data-title="PP02 期刊 Web3D">簡報展示</button>
+              <button type="button" class="load-btn" data-load="PP02_Web3D_pptx_exact_reveal.html" data-title="PP02 PPTX 視覺復刻">PPTX復刻</button>
+              <button type="button" class="load-btn" data-load="PP02_Web3D_original_animation.html" data-title="PP02 原始 PPT 動畫">PPT動畫</button>
+              <button type="button" class="load-btn" data-download="HTML/PDF/PP02_期刊.pdf" data-title="PP02 PDF 文件">PDF 原文</button>
+            </div>
+          </article>
+
+          <article class="card is-pp03">
+            <span>Technical Extension</span>
+            <h3>PP03 MCP + Bonsai 4D</h3>
+            <p>結合 MCP 之 Blender Bonsai BIM 4D 應用分析：AI Agent 語意驅動工作流。</p>
+            <div class="card-actions is-three">
+              <button type="button" class="load-btn" data-download="HTML/PDF/PP03_海報.pdf" data-title="PP03 研討會海報" style="grid-column: span 2;">海報</button>
+              <button type="button" class="load-btn" data-load="PP03_reveal.html" data-title="PP03 MCP + Bonsai BIM 4D">簡報展示</button>
+              <button type="button" class="load-btn" data-download="HTML/PDF/PP03_結合 MCP 之 Blender Bonsai BIM 4D 應用分析.pdf" data-title="PP03 PDF 文件">PDF 原文</button>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <!-- Second-level Web3D Demos -->
+      <section class="section">
+        <h2 class="section-title">第二層 Web3D 展示入口</h2>
+        <div class="file-list">
+          <button type="button" class="file-item" data-load="HTML/Journal_Index.html" data-title="Journal_Index 第二層入口">
+            <span>Journal_Index.html</span><small>第二層入口</small>
+          </button>
+          <button type="button" class="file-item" data-load="HTML/Journal_Web.html" data-title="Journal_Web">
+            <span>Journal_Web.html</span><small>靜態展示</small>
+          </button>
+          <button type="button" class="file-item" data-load="HTML/Journal_WebAni.html" data-title="Journal_WebAni">
+            <span>Journal_WebAni.html</span><small>動態展示</small>
+          </button>
+          <button type="button" class="file-item" data-load="HTML/web/PPj.YY3DW_web3d.html" data-title="PPj.YY3DW Web3D">
+            <span>PPj.YY3DW_web3d.html</span><small>技術整理</small>
+          </button>
+          <button type="button" class="file-item" data-load="HTML/web/glb.3js_007AniE.html" data-title="GLB three.js 動態">
+            <span>glb.3js_007AniE.html</span><small>GLB 動態</small>
+          </button>
+          <button type="button" class="file-item" data-load="HTML/web/GLB_IFC_http_server_viewer.html" data-title="IFC / GLB viewer">
+            <span>GLB_IFC_http_server_viewer.html</span><small>IFC 載入器</small>
+          </button>
+        </div>
+      </section>
+
+      <!-- Architecture and folder structure info -->
+      <section class="section">
+        <h2 class="section-title">網站架構與層級</h2>
+        <div class="structure">
+          第一層：<code>index.html</code> 作為總控制台，向上顯示專案標題，中間嵌入 16:9 展示器，向下映射專案欄位。<br>
+          第二層：PP02 期刊之 <code>HTML/Journal_Index.html</code> 導覽頁（已內嵌於 PP02 簡報最後一頁）。<br>
+          第三層：<code>HTML/web/*.html</code> 與 <code>HTML/web/glb/*.glb</code>，負責提供 Three.js 及模型資產。
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const viewerShell = document.getElementById("viewer-shell");
+      const viewer = document.getElementById("main-viewer");
+      const viewerTitle = document.getElementById("viewer-title");
+      const fullscreenButton = document.getElementById("fullscreen-viewer");
+      const reloadButton = document.getElementById("reload-viewer");
+      const downloadCurrent = document.getElementById("download-current");
+      
+      // Mode Switcher Elements
+      const viewerModes = document.getElementById("viewer-modes");
+      const btnModeA = document.getElementById("btn-mode-a");
+      const btnModeB = document.getElementById("btn-mode-b");
+      
+      let currentSrc = "bauhaus_animation - A.html";
+      let currentTitle = "首頁動畫 A (靜態)";
+      let currentDownload = "";
+
+      window.handleIframeRedirect = function(src, title) {
+        loadFrame(src, title);
+      };
+
+      window.addEventListener('message', (event) => {
+        if (event.data && event.data.type === 'iframeRedirect') {
+          loadFrame(event.data.src, event.data.title);
+        }
+      });
+
+      function scrollToViewer() {
+        viewerShell.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+
+      function updateActiveButtons(src) {
+        document.querySelectorAll("[data-load]").forEach((btn) => {
+          const loadSrc = btn.dataset.load;
+          // Highlight "首頁動畫" button if loaded src is either animation A or B
+          if (loadSrc === src || 
+              ((src === "bauhaus_animation - A.html" || src === "bauhaus_animation - B.html") && 
+               (loadSrc === "bauhaus_animation - A.html" || loadSrc === "bauhaus_animation - B.html"))) {
+            btn.classList.add("is-active");
+          } else {
+            btn.classList.remove("is-active");
+          }
+        });
+      }
+
+      function updateModeSwitcherVisibility(src) {
+        if (src === "bauhaus_animation - A.html" || src === "bauhaus_animation - B.html") {
+          viewerModes.style.display = "flex";
+          if (src === "bauhaus_animation - A.html") {
+            btnModeA.classList.add("is-active");
+            btnModeB.classList.remove("is-active");
+          } else {
+            btnModeA.classList.remove("is-active");
+            btnModeB.classList.add("is-active");
+          }
+        } else {
+          viewerModes.style.display = "none";
+        }
+      }
+
+      function updateDownload(src) {
+        currentDownload = src || "";
+        if (currentDownload) {
+          downloadCurrent.href = currentDownload;
+          downloadCurrent.hidden = false;
+        } else {
+          downloadCurrent.href = "#";
+          downloadCurrent.hidden = true;
+        }
+      }
+
+      function loadFrame(src, title, downloadSrc = "") {
+        currentSrc = src;
+        currentTitle = title || src;
+        viewerTitle.textContent = currentTitle;
+        viewer.innerHTML = `<iframe src="${src}" title="${currentTitle}"></iframe>`;
+        updateDownload(downloadSrc);
+        updateActiveButtons(src);
+        updateModeSwitcherVisibility(src);
+        scrollToViewer();
+      }
+
+      // Action binding for display triggers
+      document.querySelectorAll("[data-load]").forEach((button) => {
+        button.addEventListener("click", () => {
+          loadFrame(button.dataset.load, button.dataset.title);
+        });
+      });
+
+      // Bind mode switcher buttons
+      btnModeA.addEventListener("click", () => {
+        loadFrame("bauhaus_animation - A.html", "首頁動畫 A (靜態)");
+      });
+      btnModeB.addEventListener("click", () => {
+        loadFrame("bauhaus_animation - B.html", "首頁動畫 B (動態)");
+      });
+
+      // Action binding for PDF / direct downloads
+      document.querySelectorAll("[data-download]").forEach((button) => {
+        button.addEventListener("click", () => {
+          loadFrame(button.dataset.download, button.dataset.title, button.dataset.download);
+        });
+      });
+
+      reloadButton.addEventListener("click", () => {
+        if (currentSrc) {
+          loadFrame(currentSrc, currentTitle, currentDownload);
+        }
+      });
+
+      fullscreenButton.addEventListener("click", async () => {
+        if (!document.fullscreenElement) {
+          await viewerShell.requestFullscreen();
+        } else {
+          await document.exitFullscreen();
+        }
+      });
+
+      document.addEventListener("fullscreenchange", () => {
+        fullscreenButton.textContent = document.fullscreenElement ? "離開滿畫面" : "滿畫面";
+      });
+
+      // Initialize default active state styling
+      updateActiveButtons(currentSrc);
+      updateModeSwitcherVisibility(currentSrc);
+    });
+  </script>
+</body>
+</html>
